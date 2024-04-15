@@ -24,7 +24,8 @@ Comme sur l'app territoires en transitions, on a un utilisateur `yolo@dodo.com` 
 ## Instructions
 
 On veut désormais afficher des trajectoires de référence provenant de différents organismes avec des résultats et objectifs importés.
-- Maquette, à titre d’illustration
+
+![Liste des indicateurs](illustration-fonctionnalite.png)
 
 On devra donc pouvoir stocker les données suivantes :
 - Des valeurs de résultats
