@@ -1,5 +1,9 @@
 {
   "devDependencies": {
-    "supabase": "^1.157.2"
+    "supabase": "^1.157.2",
+    "vitest": "^1.5.0"
+  },
+  "scripts": {
+    "test": "vitest"
   }
 }
