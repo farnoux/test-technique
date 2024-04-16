@@ -1,9 +1,15 @@
 {
+  "scripts": {
+    "test": "vitest",
+    "db:gen": "supabase gen types typescript --local > lib/database/database-generated.types.ts"
+  },
   "devDependencies": {
     "supabase": "^1.157.2",
     "vitest": "^1.5.0"
   },
-  "scripts": {
-    "test": "vitest"
+  "dependencies": {
+    "@supabase/supabase-js": "^2.42.4",
+    "dotenv": "^16.4.5",
+    "zod": "^3.22.4"
   }
 }
