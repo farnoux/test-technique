@@ -85,6 +85,6 @@ describe("List indicator values with sources", async () => {
     );
 
     // Sources are included when the collectivity is associated with the source
-    expect(dataWithSources).toHaveLength(3);
+    expect(dataWithSources).toHaveLength(4);
   });
 });
