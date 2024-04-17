@@ -220,6 +220,20 @@ export type Database = {
       }
     }
     Functions: {
+      get_indicateur_valeurs: {
+        Args: {
+          p_indicateur_id: string
+          p_collectivite_id: number
+        }
+        Returns: {
+          indicateur_id: string
+          collectivite_id: number
+          annee: number
+          resultat: number
+          objectif: number
+          commentaire: string
+        }[]
+      }
       is_membre: {
         Args: {
           collectivite_id: number

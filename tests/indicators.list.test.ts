@@ -34,3 +34,4 @@ describe("List indicators", async () => {
     });
   });
 
+});
