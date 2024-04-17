@@ -49,6 +49,36 @@ export type Database = {
         }
         Relationships: []
       }
+      collectivite_source_externe: {
+        Row: {
+          collectivite_id: number
+          source_externe_id: number
+        }
+        Insert: {
+          collectivite_id: number
+          source_externe_id: number
+        }
+        Update: {
+          collectivite_id?: number
+          source_externe_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_collectivite_source_externe_collectivite_id_fkey"
+            columns: ["collectivite_id"]
+            isOneToOne: false
+            referencedRelation: "collectivite"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_collectivite_source_externe_source_externe_id_fkey"
+            columns: ["source_externe_id"]
+            isOneToOne: false
+            referencedRelation: "source_externe"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       indicateur_personnalise: {
         Row: {
           collectivite_id: number

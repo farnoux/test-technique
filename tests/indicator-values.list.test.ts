@@ -1,9 +1,10 @@
 import { User } from "@supabase/supabase-js";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { client } from "../lib/database/client";
+import { adminClient, client } from "../lib/database/client";
 import { getAuthUser, signIn, signOut } from "./shared/auth";
 
 const collectivityId = 1;
+const sourceId = 1;
 
 let user: User;
 
@@ -16,8 +17,8 @@ afterAll(async () => {
   await signOut();
 });
 
-describe("List indicators' values", async () => {
-  test("As an auth user, I can list the values of a custom indicator for a given collectivity", async () => {
+describe("List indicator values without sources", async () => {
+  test("List values of a custom indicator for a given collectivity", async () => {
     const customIndicatorId = "1";
 
     const { data, error } = await client.rpc("get_indicateur_valeurs", {
@@ -25,14 +26,12 @@ describe("List indicators' values", async () => {
       p_collectivite_id: collectivityId,
     });
 
-    console.log(error, data);
-
     expect(error).toBeNull();
     expect(data).toBeInstanceOf(Array);
     expect(data).toHaveLength(2);
   });
 
-  test("As a collectivity member, I can list the values of a predefinied indicator without its sources", async () => {
+  test("List values of a predefinied indicator for a given collectivity", async () => {
     const predefinedIndicatorId = "cae_1.a";
 
     const { data, error } = await client.rpc("get_indicateur_valeurs", {
@@ -44,18 +43,46 @@ describe("List indicators' values", async () => {
     expect(data).toBeInstanceOf(Array);
     expect(data).toHaveLength(2);
   });
+});
 
-  test("As a collectivity member, I can list the values of a predefinied indicator with its sources", async () => {
+describe("List indicator values with sources", async () => {
+  test("List values of a predefinied indicator for a given collectivity with its associated sources", async () => {
     const predefinedIndicatorId = "cae_1.a";
 
-    const { data, error } = await client.rpc("get_indicateur_valeurs", {
-      p_indicateur_id: predefinedIndicatorId,
-      p_collectivite_id: collectivityId,
-      p_with_sources: true,
+    const { data: dataWithoutSources } = await client.rpc(
+      "get_indicateur_valeurs",
+      {
+        p_indicateur_id: predefinedIndicatorId,
+        p_collectivite_id: collectivityId,
+        p_with_sources: true,
+      }
+    );
+
+    // No sources included when the collectivity is not associated with the source
+    expect(dataWithoutSources).toHaveLength(2);
+
+    // Associate the collectivity with the source
+    await adminClient.from("collectivite_source_externe").insert({
+      collectivite_id: collectivityId,
+      source_externe_id: 1,
     });
 
-    expect(error).toBeNull();
-    expect(data).toBeInstanceOf(Array);
-    expect(data).toHaveLength(4);
+    const { data: dataWithSources } = await client.rpc(
+      "get_indicateur_valeurs",
+      {
+        p_indicateur_id: predefinedIndicatorId,
+        p_collectivite_id: collectivityId,
+        p_with_sources: true,
+      }
+    );
+
+    // Sources are included when the collectivity is associated with the source
+    expect(dataWithSources).toHaveLength(4);
+
+    // Remove the association
+    await adminClient.from("collectivite_source_externe").delete().match({
+      collectivite_id: collectivityId,
+      source_externe_id: 1,
+    });
   });
 });
