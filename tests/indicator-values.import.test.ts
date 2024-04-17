@@ -1,5 +1,5 @@
 import { User } from "@supabase/supabase-js";
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
 import { adminClient, client } from "../lib/database/client";
 import { getAuthUser, signIn, signOut } from "./shared/auth";
 
@@ -17,15 +17,17 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await signOut();
-
-  // Remove the inserted value
-  await adminClient
-    .from("indicateur_source_externe_valeurs")
-    .delete()
-    .match({ indicateur_id: indicatorId, annee: annee, source_id: sourceId });
 });
 
 describe("Insert indicator values", async () => {
+  afterEach(async () => {
+    // Remove the inserted value
+    await adminClient
+      .from("indicateur_source_externe_valeurs")
+      .delete()
+      .match({ indicateur_id: indicatorId, annee: annee, source_id: sourceId });
+  });
+
   test("As an auth user, I cannot insert values of an external source indicators", async () => {
     const { data, error } = await client
       .from("indicateur_source_externe_valeurs")

@@ -1,5 +1,5 @@
 import { User } from "@supabase/supabase-js";
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
+import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
 import { adminClient, client } from "../lib/database/client";
 import { getAuthUser, signIn, signOut } from "./shared/auth";
 
@@ -46,7 +46,15 @@ describe("List indicator values without sources", async () => {
 });
 
 describe("List indicator values with sources", async () => {
-  test("List values of a predefinied indicator for a given collectivity with its associated sources", async () => {
+  afterEach(async () => {
+    // Remove the association
+    await adminClient.from("collectivite_source_externe").delete().match({
+      collectivite_id: collectivityId,
+      source_externe_id: 1,
+    });
+  });
+
+  test("List values of a predefined indicator for a given collectivity with its associated sources", async () => {
     const predefinedIndicatorId = "cae_1.a";
 
     const { data: dataWithoutSources } = await client.rpc(
@@ -78,11 +86,5 @@ describe("List indicator values with sources", async () => {
 
     // Sources are included when the collectivity is associated with the source
     expect(dataWithSources).toHaveLength(3);
-
-    // Remove the association
-    await adminClient.from("collectivite_source_externe").delete().match({
-      collectivite_id: collectivityId,
-      source_externe_id: 1,
-    });
   });
 });
