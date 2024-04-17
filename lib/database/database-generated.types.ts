@@ -176,6 +176,48 @@ export type Database = {
           },
         ]
       }
+      indicateur_source_externe_valeurs: {
+        Row: {
+          annee: number
+          commentaire: string | null
+          indicateur_id: string
+          objectif: number | null
+          resultat: number | null
+          source_id: number
+        }
+        Insert: {
+          annee: number
+          commentaire?: string | null
+          indicateur_id: string
+          objectif?: number | null
+          resultat?: number | null
+          source_id: number
+        }
+        Update: {
+          annee?: number
+          commentaire?: string | null
+          indicateur_id?: string
+          objectif?: number | null
+          resultat?: number | null
+          source_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "indicateur_predefini_valeurs_collectivite_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "source_externe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "indicateur_predefini_valeurs_indicateur_id_fkey"
+            columns: ["indicateur_id"]
+            isOneToOne: false
+            referencedRelation: "indicateur_predefini"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       membre: {
         Row: {
           collectivite_id: number
@@ -206,6 +248,21 @@ export type Database = {
           },
         ]
       }
+      source_externe: {
+        Row: {
+          id: number
+          nom: string
+        }
+        Insert: {
+          id?: number
+          nom: string
+        }
+        Update: {
+          id?: number
+          nom?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       indicateur_par_collectivite: {
@@ -224,10 +281,11 @@ export type Database = {
         Args: {
           p_indicateur_id: string
           p_collectivite_id: number
+          p_with_sources?: boolean
         }
         Returns: {
           indicateur_id: string
-          collectivite_id: number
+          source: string
           annee: number
           resultat: number
           objectif: number
