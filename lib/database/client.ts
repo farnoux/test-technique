@@ -8,3 +8,8 @@ export const client = createClient<Database>(
   z.string().parse(process.env.SUPABASE_URL),
   z.string().parse(process.env.SUPABASE_ANON_KEY)
 );
+
+export const adminClient = createClient<Database>(
+  z.string().parse(process.env.SUPABASE_URL),
+  z.string().parse(process.env.SUPABASE_SERVICE_ROLE_KEY)
+);
