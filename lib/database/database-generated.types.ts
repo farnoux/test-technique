@@ -208,7 +208,16 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      indicateur_par_collectivite: {
+        Row: {
+          collectivite_id: number | null
+          description: string | null
+          id: string | null
+          nom: string | null
+          unite: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       is_membre: {
