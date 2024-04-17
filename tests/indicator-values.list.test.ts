@@ -44,4 +44,18 @@ describe("List indicators' values", async () => {
     expect(data).toBeInstanceOf(Array);
     expect(data).toHaveLength(2);
   });
+
+  test("As a collectivity member, I can list the values of a predefinied indicator with its sources", async () => {
+    const predefinedIndicatorId = "cae_1.a";
+
+    const { data, error } = await client.rpc("get_indicateur_valeurs", {
+      p_indicateur_id: predefinedIndicatorId,
+      p_collectivite_id: collectivityId,
+      p_with_sources: true,
+    });
+
+    expect(error).toBeNull();
+    expect(data).toBeInstanceOf(Array);
+    expect(data).toHaveLength(4);
+  });
 });

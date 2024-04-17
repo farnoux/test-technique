@@ -15,3 +15,9 @@ INSERT INTO public.indicateur_personnalise (id, collectivite_id, nom, descriptio
 
 INSERT INTO public.indicateur_personnalise_valeurs (indicateur_id, annee, resultat, objectif, commentaire) VALUES (1, 2023, 500, null, 'un commentaire');
 INSERT INTO public.indicateur_personnalise_valeurs (indicateur_id, annee, resultat, objectif, commentaire) VALUES (1, 2025, null, 800, 'un autre commentaire');
+
+INSERT INTO public.source_externe (id, nom) VALUES (1, 'CITEPA');
+
+INSERT INTO public.indicateur_source_externe_valeurs (source_id, indicateur_id, annee, resultat, objectif, commentaire) VALUES (1, 'cae_1.a', 2023, 10, 9, 'un commentaire externe');
+INSERT INTO public.indicateur_source_externe_valeurs (source_id, indicateur_id, annee, resultat, objectif, commentaire) VALUES (1, 'cae_1.a', 2024, null, 7, 'un commentaire externe');
+INSERT INTO public.indicateur_source_externe_valeurs (source_id, indicateur_id, annee, resultat, objectif, commentaire) VALUES (1, 'cae_2.a', 2023, 8900, null, 'un commentaire externe');
