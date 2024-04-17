@@ -7,7 +7,7 @@ AS
   LEFT JOIN indicateur_predefini_valeurs AS v
     ON i.id = v.indicateur_id
   
-  UNION 
+  UNION ALL
 
   SELECT i.id::text, i.collectivite_id, i.nom, i.description, i.unite
   FROM indicateur_personnalise AS i
