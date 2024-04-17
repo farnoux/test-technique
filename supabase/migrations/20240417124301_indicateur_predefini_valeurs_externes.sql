@@ -5,9 +5,18 @@ CREATE TABLE "public"."source_externe" (
     PRIMARY KEY ("id")
 );
 
-CREATE UNIQUE INDEX source_externe_nom_key ON public.source_externe USING btree (nom)
+CREATE UNIQUE INDEX source_externe_nom_key ON public.source_externe USING btree (nom);
 
 COMMENT ON TABLE "public"."source_externe" IS 'Valeurs des indicateurs externes pour chaque source et chaque année';
+
+alter table "public"."source_externe" enable row level security;
+
+create policy "Allow read" on "public"."source_externe"
+as permissive
+for select
+to authenticated
+using (true);
+
 
 
 CREATE TABLE "public"."indicateur_source_externe_valeurs" (
@@ -23,3 +32,12 @@ CREATE TABLE "public"."indicateur_source_externe_valeurs" (
 );
 
 COMMENT ON TABLE "public"."indicateur_source_externe_valeurs" IS 'Valeurs des indicateurs predefini pour chaque source externe et chaque année';
+
+alter table "public"."indicateur_source_externe_valeurs" enable row level security;
+
+create policy "Allow read"
+on "public"."indicateur_source_externe_valeurs"
+as permissive
+for select
+to authenticated
+using (true);
