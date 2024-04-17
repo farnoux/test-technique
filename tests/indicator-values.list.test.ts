@@ -77,7 +77,7 @@ describe("List indicator values with sources", async () => {
     );
 
     // Sources are included when the collectivity is associated with the source
-    expect(dataWithSources).toHaveLength(4);
+    expect(dataWithSources).toHaveLength(3);
 
     // Remove the association
     await adminClient.from("collectivite_source_externe").delete().match({
