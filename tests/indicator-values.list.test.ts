@@ -2,6 +2,8 @@ import { User } from "@supabase/supabase-js";
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
 import { adminClient, client } from "../lib/database/client";
 import { getAuthUser, signIn, signOut } from "./shared/auth";
+import { indicatorValuesSchema } from "../lib/domain/indicator-values";
+import { z } from "zod";
 
 const collectivityId = 1;
 const sourceId = 1;
@@ -29,6 +31,10 @@ describe("List indicator values without sources", async () => {
     expect(error).toBeNull();
     expect(data).toBeInstanceOf(Array);
     expect(data).toHaveLength(2);
+
+    const schema = z.array(indicatorValuesSchema.extend({ source: z.null() }));
+
+    expect(schema.safeParse(data).success).toBeTruthy();
   });
 
   test("List values of a predefinied indicator for a given collectivity", async () => {
@@ -42,6 +48,10 @@ describe("List indicator values without sources", async () => {
     expect(error).toBeNull();
     expect(data).toBeInstanceOf(Array);
     expect(data).toHaveLength(2);
+
+    const schema = z.array(indicatorValuesSchema.extend({ source: z.null() }));
+
+    expect(schema.safeParse(data).success).toBeTruthy();
   });
 });
 
@@ -56,6 +66,7 @@ describe("List indicator values with sources", async () => {
 
   test("List values of a predefined indicator for a given collectivity with its associated sources", async () => {
     const predefinedIndicatorId = "cae_1.a";
+    const expectedSchema = z.array(indicatorValuesSchema);
 
     const { data: dataWithoutSources } = await client.rpc(
       "get_indicateur_valeurs",
@@ -68,6 +79,7 @@ describe("List indicator values with sources", async () => {
 
     // No sources included when the collectivity is not associated with the source
     expect(dataWithoutSources).toHaveLength(2);
+    expect(expectedSchema.safeParse(dataWithoutSources).success).toBeTruthy();
 
     // Associate the collectivity with the source
     await adminClient.from("collectivite_source_externe").insert({
@@ -86,5 +98,6 @@ describe("List indicator values with sources", async () => {
 
     // Sources are included when the collectivity is associated with the source
     expect(dataWithSources).toHaveLength(4);
+    expect(expectedSchema.safeParse(dataWithSources).success).toBeTruthy();
   });
 });
