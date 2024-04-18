@@ -32,7 +32,12 @@ describe("List indicator values without sources", async () => {
     expect(data).toBeInstanceOf(Array);
     expect(data).toHaveLength(2);
 
-    const schema = z.array(indicatorValuesSchema.extend({ source: z.null() }));
+    const schema = z.array(
+      indicatorValuesSchema.extend({
+        source: z.null(),
+        indicateur_id: z.enum([customIndicatorId]),
+      })
+    );
 
     expect(schema.safeParse(data).success).toBeTruthy();
   });
@@ -49,9 +54,14 @@ describe("List indicator values without sources", async () => {
     expect(data).toBeInstanceOf(Array);
     expect(data).toHaveLength(2);
 
-    const schema = z.array(indicatorValuesSchema.extend({ source: z.null() }));
+    const expectedSchema = z.array(
+      indicatorValuesSchema.extend({
+        source: z.null(),
+        indicateur_id: z.enum([predefinedIndicatorId]),
+      })
+    );
 
-    expect(schema.safeParse(data).success).toBeTruthy();
+    expect(expectedSchema.safeParse(data).success).toBeTruthy();
   });
 });
 
@@ -66,7 +76,11 @@ describe("List indicator values with sources", async () => {
 
   test("List values of a predefined indicator for a given collectivity with its associated sources", async () => {
     const predefinedIndicatorId = "cae_1.a";
-    const expectedSchema = z.array(indicatorValuesSchema);
+    const expectedSchema = z.array(
+      indicatorValuesSchema.extend({
+        indicateur_id: z.enum([predefinedIndicatorId]),
+      })
+    );
 
     const { data: dataWithoutSources } = await client.rpc(
       "get_indicateur_valeurs",
